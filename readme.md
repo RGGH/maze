@@ -1,3 +1,4 @@
+[![Rust](https://github.com/RGGH/maze/actions/workflows/rust.yml/badge.svg)](https://github.com/RGGH/maze/actions/workflows/rust.yml)
 # maze game - using minifb
 
 - 1d array stores maze
