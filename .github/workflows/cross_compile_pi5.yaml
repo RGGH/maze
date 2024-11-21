@@ -11,12 +11,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Rust
-        uses: actions/setup-rust@v1
-      - name: Build for ARM
+        uses: actions/setup-rust@v1  # Corrected action version
+
+      - name: Build project
         run: cargo build --release --target aarch64-unknown-linux-gnu
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
