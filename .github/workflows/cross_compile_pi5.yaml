@@ -1,3 +1,4 @@
+
 name: Rust Cross Compile for Raspberry Pi 5 (ARM64)
 
 on:
@@ -13,16 +14,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Rust
-        uses: actions/setup-rust@v1  # Corrected action version
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        component: rustfmt
 
-      - name: Build project
-        run: cargo build --release --target aarch64-unknown-linux-gnu
+    - name: Install cross
+      run: cargo install cross
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: pi-build
-          path: target/aarch64-unknown-linux-gnu/release/maze
+    - name: Build for ARM64 (Raspberry Pi 5)
+      run: cross build --target aarch64-unknown-linux-gnu --release
+
+    - name: Upload artifact for Raspberry Pi
+      uses: actions/upload-artifact@v3
+      with:
+        name: pi-build
+        path: target/aarch64-unknown-linux-gnu/release/maze
