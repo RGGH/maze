@@ -5,3 +5,14 @@ edition = "2021"
 
 [dependencies]
 minifb = "0.27.0"
+
+[dev-dependencies]
+cross = "0.2"
+
+[profile.release]
+opt-level = "z" # Optimize for binary size; change to "3" for maximum speed
+lto = true       # Enable Link-Time Optimization
+codegen-units = 1 # Better optimization by reducing parallelism
+panic = "abort"   # Reduce overhead of unwinding
+strip = true      # Strip debugging symbols
+debug = false     # Disable debug information in the release binary
