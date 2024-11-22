@@ -1,8 +1,9 @@
 use minifb::{Key, Window, WindowOptions};
 use maze::{is_walkable,handle_input,draw_square};
-
 use crate::constants::{WIDTH, HEIGHT, GRID_SIZE};
 use crate::constants::GHOST_MOVE_FRAMES;
+use std::{thread, time};
+
 
 mod constants; 
                                      
@@ -43,13 +44,17 @@ fn main() {
 
     let mut path_index = 0;
     let mut frame_count = 0;
+    let frame_time = time::Duration::from_millis(26); // ~60 FPS
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
+        let frame_start = time::Instant::now();
         frame_count += 1;
 
         // Move the ghost every GHOST_MOVE_FRAMES
         if frame_count >= GHOST_MOVE_FRAMES {
             frame_count = 0;
+            // dr (delta row): Tells how much to change the row index (Y-axis movement)
+            // dc (delta column): Tells how much to change the column index (X-axis movement)
             let (dr, dc) = path[path_index];
             let new_pos = (
                 (ghost_pos.0 as isize + dr) as usize,
@@ -91,5 +96,12 @@ fn main() {
 
         // Update the window
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
+
+        // Sleep for the remaining time to maintain consistent frame rate
+    let elapsed = frame_start.elapsed();
+    if elapsed < frame_time {
+        thread::sleep(frame_time - elapsed);
+    }
+
     }
 }
